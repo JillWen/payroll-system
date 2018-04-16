@@ -41,22 +41,25 @@ public class PaymentServiceImpl implements PaymentService {
             throw new EmployeeException("未找到工号为" + employeeId + "的员工");
         }
         double workDays = attendanceMapper.selectWorkDays(employeeId, workMonth);
+        int basicWage = employee.getWage();
+        String role = employee.getRole();
         //方便以后扩展用的其他工资扣除项
         double otherDeductions = 0;
-        return getFinalWage(employee, workDays, otherDeductions);
+        return getFinalWage(basicWage, role, workDays, otherDeductions);
     }
 
     /**
      * 得到扣除社保和其他扣款后的最终工资
      *
-     * @param employee 员工信息
+     * @param basicWage 员工基本薪资
+     * @param role 员工工种
      * @param workDays 出勤天数
      * @return 其他扣款
      */
-    private BigDecimal getFinalWage(Employee employee, double workDays, double otherDeductions) {
-        int basicWage = employee.getWage();
+    private BigDecimal getFinalWage(int basicWage, String role, double workDays, double otherDeductions) {
+
         BigDecimal wage = BigDecimal.valueOf(basicWage).multiply
-                (BigDecimal.valueOf(WageCardinalityTool.getWageCardinality(employee.getRole())))
+                (BigDecimal.valueOf(WageCardinalityTool.getWageCardinality(role)))
                 .multiply(BigDecimal.valueOf(workDays / 22));
         BigDecimal socialSecurity = BigDecimal.valueOf(basicWage)
                 .multiply(BigDecimal.valueOf(8 + 1 + 2L))
