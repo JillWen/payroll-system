@@ -20,11 +20,10 @@
     </select>
 
     <select id="selectWorkDays" resultType="double">
-        SELECT
-            work_day
+        SELECT work_day
         FROM attendance_info
         WHERE employee_id = #{employeeId}
-        AND work_month = #{workMonth}
+              AND work_month = #{workMonth}
     </select>
 
     <delete id="deleteByPrimaryKey">

@@ -25,8 +25,8 @@ public class PaymentController {
     PaymentService paymentService;
 
     @RequestMapping(value = "payment", method = RequestMethod.GET)
-    public BigDecimal getPayment(@RequestParam(value = "employeeId")String employeeId,
-                                 @RequestParam(value = "workMonth")String workMonth){
+    public BigDecimal getPayment(@RequestParam(value = "employeeId") String employeeId,
+                                 @RequestParam(value = "workMonth") String workMonth) {
         return paymentService.getPayment(employeeId, workMonth);
     }
 }

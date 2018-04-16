@@ -16,6 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 public class WageCardinalityTool {
     private static final String CADRE = "a";
     private static final String GRASS_ROOT = "b";
+
+    private WageCardinalityTool() {
+    }
+
     public static double getWageCardinality(String role){
         if (StringUtils.isBlank(role)){
             throw new WrongRoleException("角色类型不能为空");

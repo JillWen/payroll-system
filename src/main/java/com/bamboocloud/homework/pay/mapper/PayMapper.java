@@ -19,6 +19,7 @@ import java.util.List;
 public interface PayMapper {
     /**
      * 获得工资信息
+     *
      * @param id 物理ID
      * @return 工资信息
      */
@@ -26,12 +27,14 @@ public interface PayMapper {
 
     /**
      * 获得所有工资信息
+     *
      * @return 所有工资信息
      */
     List<Pay> selectAll();
 
     /**
      * 批量插入工资信息
+     *
      * @param list 工资信息列表
      * @return 插入条数
      */

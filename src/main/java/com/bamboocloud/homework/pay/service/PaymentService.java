@@ -17,8 +17,9 @@ public interface PaymentService {
 
     /**
      * 得到员工某个月工资
+     *
      * @param employeeId 员工工号
-     * @param workMonth 工作月份
+     * @param workMonth  工作月份
      * @return 该员工当月工资
      */
     BigDecimal getPayment(String employeeId, String workMonth);

@@ -19,6 +19,7 @@ import java.util.List;
 public interface AttendanceMapper {
     /**
      * 删除出勤信息
+     *
      * @param id 物理ID
      * @return 删除结果
      */
@@ -26,6 +27,7 @@ public interface AttendanceMapper {
 
     /**
      * 批量插入出勤信息
+     *
      * @param list 出勤信息列表
      * @return 插入结果
      */
@@ -33,6 +35,7 @@ public interface AttendanceMapper {
 
     /**
      * 查询出勤信息
+     *
      * @param id 物理ID
      * @return 出勤信息
      */
@@ -40,6 +43,7 @@ public interface AttendanceMapper {
 
     /**
      * 修改出勤信息
+     *
      * @param attendance 出勤信息
      * @return 修改结果
      */
@@ -47,8 +51,9 @@ public interface AttendanceMapper {
 
     /**
      * 查询出勤天数
+     *
      * @param employeeId 员工工号
-     * @param workMonth 工作月份
+     * @param workMonth  工作月份
      * @return 该月该员工出勤天数
      */
     double selectWorkDays(@Param(value = "employeeId") String employeeId,

@@ -19,6 +19,7 @@ import java.util.List;
 public interface EmployeeMapper {
     /**
      * 删除员工信息
+     *
      * @param id 物理ID
      * @return 删除结果
      */
@@ -26,6 +27,7 @@ public interface EmployeeMapper {
 
     /**
      * 批量插入员工信息
+     *
      * @param list 员工信息列表
      * @return
      */
@@ -33,6 +35,7 @@ public interface EmployeeMapper {
 
     /**
      * 查询员工信息
+     *
      * @param id 物理ID
      * @return 员工信息
      */
@@ -40,6 +43,7 @@ public interface EmployeeMapper {
 
     /**
      * 修改员工信息
+     *
      * @param employee 员工信息
      * @return 修改结果
      */
