@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bamboocloud.homework.pay.mapper.AttendanceMapper">
+    <resultMap id="BaseResultMap" type="com.bamboocloud.homework.pay.model.Attendance">
+        <id column="id" property="id"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="work_month" property="workMonth"/>
+        <result column="work_day" property="workDays"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, employee_id, work_month, work_day
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM attendance_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectWorkDays" resultType="double">
+        SELECT
+            work_day
+        FROM attendance_info
+        WHERE employee_id = #{employeeId}
+        AND work_month = #{workMonth}
+    </select>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM attendance_info
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="insertAll">
+        INSERT INTO attendance_info (id, employee_id, work_month, work_day)
+        <foreach collection="list" open="VALUES " separator="," item="item">
+            (
+            #{item.id},
+            #{item.employeeId},
+            #{item.workMonth},
+            #{item.workDays}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        UPDATE attendance_info
+        <set>
+            work_day = #{workDays}
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

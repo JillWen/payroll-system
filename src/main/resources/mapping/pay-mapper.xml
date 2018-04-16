@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bamboocloud.homework.pay.mapper.PayMapper">
+    <resultMap id="BaseResultMap" type="com.bamboocloud.homework.pay.model.Pay">
+        <id column="id" property="id"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="name"/>
+        <result column="work_month" property="workMonth"/>
+        <result column="work_day" property="workDays"/>
+        <result column="current_wage" property="currentWage"/>
+        <result column="social_security" property="socialSecurity"/>
+        <result column="welfare" property="welfare"/>
+        <result column="other_deduction" property="otherDeduction"/>
+        <result column="pay" property="pay"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, employee_id, employee_name, work_month, work_day, current_wage, social_security,
+        welfare, other_deduction, pay
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM payment_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectAll">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM payment_info
+    </select>
+
+    <insert id="insertAll">
+        INSERT INTO payment_info (id, employee_id, employee_name, work_month,
+        work_day, current_wage, social_security, welfare, other_deduction, pay)
+        <foreach collection="list" open="VALUES " separator="," item="item">
+            (
+            #{item.id},
+            #{item.employeeId},
+            #{item.name},
+            #{item.workMonth},
+            #{item.workDays}
+            #{item.currentWage}
+            #{item.socialSecurity}
+            #{item.welfare}
+            #{item.otherDeduction}
+            #{item.pay}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bamboocloud.homework.pay.mapper.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="com.bamboocloud.homework.pay.model.Employee">
+        <id column="id" property="id"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="name"/>
+        <result column="basic_wage" property="wage"/>
+        <result column="role" property="role"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, employee_id, employee_name, basic_wage, role
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM employee
+        WHERE id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM employee
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="insertAll">
+        INSERT INTO employee (id, employee_id, employee_name, basic_wage, role)
+        <foreach collection="list" open="VALUES " separator="," item="item">
+            (
+            #{item.id},
+            #{item.employeeId},
+            #{item.name},
+            #{item.wage},
+            #{item.role}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        UPDATE t_user
+        <set>
+            <if test="name != null">
+                employee_name = #{name},
+            </if>
+            <if test="wage != null">
+                basic_wage = #{wage},
+            </if>
+            <if test="role != null">
+                role = #{role},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>
