@@ -11,7 +11,16 @@
         <result column="social_security" property="socialSecurity"/>
         <result column="welfare" property="welfare"/>
         <result column="other_deduction" property="otherDeduction"/>
-        <result column="pay" property="pay"/>
+        <result column="pay" property="finalPay"/>
+    </resultMap>
+
+    <resultMap id="WageComponentResultMap" type="com.bamboocloud.homework.pay.dto.PayDTO">
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="name"/>
+        <result column="work_month" property="workMonth"/>
+        <result column="work_day" property="workDays"/>
+        <result column="basic_wage" property="currentWage"/>
+        <result column="role" property="role"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -46,8 +55,22 @@
             #{item.socialSecurity}
             #{item.welfare}
             #{item.otherDeduction}
-            #{item.pay}
+            #{item.finalPay}
             )
         </foreach>
     </insert>
+
+    <select id="getWageBasicComponentByTime" resultMap="WageComponentResultMap">
+        SELECT
+            employee.employee_id,
+            employee_name,
+            basic_wage,
+            work_month,
+            work_day,
+            role
+        FROM employee
+            INNER JOIN attendance_info
+                ON employee.employee_id = attendance_info.employee_id
+        WHERE work_month = #{workMonth};
+    </select>
 </mapper>

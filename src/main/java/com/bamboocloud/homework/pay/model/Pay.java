@@ -62,24 +62,19 @@ public class Pay  implements Serializable {
     /**
      * 实际薪资
      */
-    private BigDecimal pay;
+    private BigDecimal finalPay;
 
     public Pay() {
     }
 
     public Pay(String id, String employeeId, String name, String workMonth, Double workDays,
-               BigDecimal currentWage, BigDecimal socialSecurity, BigDecimal welfare,
-               BigDecimal otherDeduction, BigDecimal pay) {
+               BigDecimal currentWage) {
         this.id = id;
         this.employeeId = employeeId;
         this.name = name;
         this.workMonth = workMonth;
         this.workDays = workDays;
         this.currentWage = currentWage;
-        this.socialSecurity = socialSecurity;
-        this.welfare = welfare;
-        this.otherDeduction = otherDeduction;
-        this.pay = pay;
     }
 
     public String getId() {
@@ -134,31 +129,35 @@ public class Pay  implements Serializable {
         return socialSecurity;
     }
 
-    public void setSocialSecurity(BigDecimal socialSecurity) {
+    public Pay setSocialSecurity(BigDecimal socialSecurity) {
         this.socialSecurity = socialSecurity;
+        return this;
     }
 
     public BigDecimal getWelfare() {
         return welfare;
     }
 
-    public void setWelfare(BigDecimal welfare) {
+    public Pay setWelfare(BigDecimal welfare) {
         this.welfare = welfare;
+        return this;
     }
 
     public BigDecimal getOtherDeduction() {
         return otherDeduction;
     }
 
-    public void setOtherDeduction(BigDecimal otherDeduction) {
+    public Pay setOtherDeduction(BigDecimal otherDeduction) {
         this.otherDeduction = otherDeduction;
+        return this;
     }
 
-    public BigDecimal getPay() {
-        return pay;
+    public BigDecimal getFinalPay() {
+        return finalPay;
     }
 
-    public void setPay(BigDecimal pay) {
-        this.pay = pay;
+    public Pay setFinalPay(BigDecimal finalPay) {
+        this.finalPay = finalPay;
+        return this;
     }
 }

@@ -1,6 +1,9 @@
 package com.bamboocloud.homework.pay.service;
 
+import com.bamboocloud.homework.pay.model.Pay;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>文件名称: PaymentService</p>
@@ -22,5 +25,13 @@ public interface PaymentService {
      * @param workMonth  工作月份
      * @return 该员工当月工资
      */
-    BigDecimal getPayment(String employeeId, String workMonth);
+    BigDecimal getSingleEmployeePayment(String employeeId, String workMonth);
+
+    /**
+     * 得到某个月所有员工的工资
+     *
+     * @param workMonth 工作月份
+     * @return 所有工资信息
+     */
+    List<Pay> getEmployeePaymentsByMonth(String workMonth);
 }

@@ -1,5 +1,6 @@
 package com.bamboocloud.homework.pay.controller;
 
+import com.bamboocloud.homework.pay.model.Pay;
 import com.bamboocloud.homework.pay.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>文件名称: PaymentController </p>
@@ -27,6 +29,11 @@ public class PaymentController {
     @RequestMapping(value = "payment", method = RequestMethod.GET)
     public BigDecimal getPayment(@RequestParam(value = "employeeId") String employeeId,
                                  @RequestParam(value = "workMonth") String workMonth) {
-        return paymentService.getPayment(employeeId, workMonth);
+        return paymentService.getSingleEmployeePayment(employeeId, workMonth);
+    }
+
+    @RequestMapping(value = "month_payment", method = RequestMethod.GET)
+    public List<Pay> getPayment(@RequestParam(value = "workMonth") String workMonth) {
+        return paymentService.getEmployeePaymentsByMonth(workMonth);
     }
 }

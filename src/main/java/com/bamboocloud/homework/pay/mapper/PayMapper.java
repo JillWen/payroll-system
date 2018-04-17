@@ -1,5 +1,6 @@
 package com.bamboocloud.homework.pay.mapper;
 
+import com.bamboocloud.homework.pay.dto.PayDTO;
 import com.bamboocloud.homework.pay.model.Pay;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -39,4 +40,11 @@ public interface PayMapper {
      * @return 插入条数
      */
     int insertAll(@Param(value = "list") List<Pay> list);
+
+    /**
+     * 根据工作月份查出当月所有员工的基本薪资，当月出勤天数等影响最后工资的信息
+     * @param workMonth 月份
+     * @return PayDTO
+     */
+    List<PayDTO> getWageBasicComponentByTime(String workMonth);
 }
