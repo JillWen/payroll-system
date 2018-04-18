@@ -34,3 +34,16 @@ CREATE TABLE payment
 );
 ALTER TABLE payment COMMENT = '工资';
 
+# test data
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('1', '1', '马云', 8000, 'a');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('2', '2', '马化腾', 8888, 'a');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('3', '3', '任正非', 8600, 'a');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('4', '4', '刘亦菲', 3500, 'b');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('5', '5', '沈腾', 5800, 'b');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('6', '6', '刘谋', 6000, 'b');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('7', '7', '陈意涵', 4000, 'b');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('8', '8', '林志玲', 7000, 'a');
+INSERT INTO payment.employee (id, employee_id, employee_name, basic_wage, role) VALUES ('9', '9', '孙红雷', 7500, 'b');
+INSERT INTO payment.attendance_info (id, employee_id, work_month, work_day) VALUES ('1', '1', '201803', 22);
+INSERT INTO payment.attendance_info (id, employee_id, work_month, work_day) VALUES ('2', '2', '201803', 22);
+
