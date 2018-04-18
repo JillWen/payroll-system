@@ -99,6 +99,8 @@ public class ExcelUtil {
                 BigDecimal bigDecimal = (BigDecimal) value;
                 //不使用科学计数法表示
                 cell.setCellValue(bigDecimal.stripTrailingZeros().toPlainString());
+            } else if (Double.class.equals(returnType)) {
+                cell.setCellValue(getDoubleString((Double) value));
             } else {
                 cell.setCellValue(String.valueOf(value));
             }
@@ -225,25 +227,45 @@ public class ExcelUtil {
     }
 
     /**
-     * 单独设置数字类型单元格值以去掉多余的0
+     * 单独设置数字类型单元格值
      *
      * @param cells 行结果集
      * @param cell  单元格
      */
     private void setNumericCellValue(ArrayList<String> cells, Cell cell) {
+        String finalValue = getDoubleTypeCellValue(cell);
+        cells.add(finalValue);
+    }
+
+    /**
+     * 获取小数类型单元格的值，去掉多余的O
+     *
+     * @param cell 单元格
+     */
+    private String getDoubleTypeCellValue(Cell cell) {
         Double cellValue = cell.getNumericCellValue();
         Double doubleValue = cellValue;
-        Long longValue = Math.round(cellValue);
+        //去掉多余小数位.0
+        return getDoubleString(doubleValue);
+    }
+
+    /**
+     * 获取小数类型单元格的值，去掉多余的O
+     * @param doubleValue double数值
+     */
+    private String getDoubleString(Double doubleValue) {
         Object inputValue;
-        //判断是否含有小数位.0
         final String s = ".0";
+        Long longValue = Math.round(doubleValue);
+        String finalValue;
         if (Double.parseDouble(longValue + s) == doubleValue) {
             inputValue = longValue;
+            DecimalFormat df = new DecimalFormat("#");
+            finalValue = String.valueOf(df.format(inputValue));
         } else {
-            inputValue = doubleValue;
+            finalValue = String.valueOf(doubleValue);
         }
-        DecimalFormat df = new DecimalFormat("#");
-        cells.add(String.valueOf(df.format(inputValue)));
+        return finalValue;
     }
 
 }
