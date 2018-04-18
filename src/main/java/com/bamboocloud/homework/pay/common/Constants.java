@@ -58,4 +58,6 @@ public class Constants {
             return STRING_TO_ENUM.get(symbol);
         }
     }
+
+    public static final String GENERAL_EXCEPTION_MSG = "Unknown exception : {}";
 }

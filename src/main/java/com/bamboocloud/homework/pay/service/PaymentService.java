@@ -34,4 +34,12 @@ public interface PaymentService {
      * @return 所有工资信息
      */
     List<Pay> getEmployeePaymentsByMonth(String workMonth);
+
+    /**
+     * 通过出勤表格得到某个月所有员工的工资
+     *
+     * @param workMonth 工作月份
+     * @return 所有工资信息
+     */
+    List<Pay> getEmployeePaymentsByExcel(String workMonth, String file);
 }

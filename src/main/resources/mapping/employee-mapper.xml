@@ -20,6 +20,12 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM employee
+    </select>
+
     <delete id="deleteByPrimaryKey">
         DELETE FROM employee
         WHERE id = #{id}

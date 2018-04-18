@@ -2,19 +2,23 @@ package com.bamboocloud.homework.pay.service;
 
 import com.bamboocloud.homework.pay.common.exception.EmployeeException;
 import com.bamboocloud.homework.pay.common.util.RegexUtil;
-import com.bamboocloud.homework.pay.common.util.WageCardinalityTool;
+import com.bamboocloud.homework.pay.common.util.WageCardinalityUtil;
+import com.bamboocloud.homework.pay.common.util.excel.ExcelUtil;
 import com.bamboocloud.homework.pay.dto.PayDTO;
-import com.bamboocloud.homework.pay.mapper.PayMapper;
-import com.bamboocloud.homework.pay.model.Employee;
 import com.bamboocloud.homework.pay.mapper.AttendanceMapper;
 import com.bamboocloud.homework.pay.mapper.EmployeeMapper;
+import com.bamboocloud.homework.pay.mapper.PayMapper;
+import com.bamboocloud.homework.pay.model.Employee;
 import com.bamboocloud.homework.pay.model.Pay;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +33,7 @@ import java.util.UUID;
  */
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentServiceImpl.class);
     @Autowired
     EmployeeMapper employeeMapper;
     @Autowired
@@ -63,20 +68,26 @@ public class PaymentServiceImpl implements PaymentService {
         }
         List<PayDTO> payComponents = payMapper.getWageBasicComponentByTime(workMonth);
         List<Pay> pays = new ArrayList<>();
-        for (PayDTO payDTO : payComponents){
-            Pay pay = setPay(workMonth, payDTO);
+        for (PayDTO payDTO : payComponents) {
+            Pay pay = setPayFromDB(workMonth, payDTO);
             pays.add(pay);
         }
         return pays;
     }
 
+    @Override
+    public List<Pay> getEmployeePaymentsByExcel(String workMonth, String file) {
+        return setPayFromExcel(file, workMonth);
+    }
+
     /**
-     * 设置薪资信息
+     * 设置薪资信息(数据从数据库获取)
+     *
      * @param workMonth 工作月份
-     * @param payDTO payDTO
+     * @param payDTO    payDTO
      * @return 薪资信息
      */
-    private Pay setPay(String workMonth, PayDTO payDTO) {
+    private Pay setPayFromDB(String workMonth, PayDTO payDTO) {
         String id = UUID.randomUUID().toString();
         String employeeId = payDTO.getEmployeeId();
         String name = payDTO.getName();
@@ -85,11 +96,65 @@ public class PaymentServiceImpl implements PaymentService {
         BigDecimal socialSecurity = getSocialSecurity(currentWage);
         BigDecimal welfare = BigDecimal.valueOf(0);
         BigDecimal otherDeduction = BigDecimal.valueOf(0);
-        BigDecimal finalPay = getFinalWage(currentWage,payDTO.getRole(),workDays,otherDeduction);
-        Pay pay = new Pay(id,employeeId,name,workMonth,workDays,currentWage);
+        BigDecimal finalPay = getFinalWage(currentWage, payDTO.getRole(), workDays, otherDeduction);
+        Pay pay = new Pay(id, employeeId, name, workMonth, workDays, currentWage);
         pay.setSocialSecurity(socialSecurity).setWelfare(welfare)
                 .setFinalPay(finalPay).setOtherDeduction(otherDeduction);
         return pay;
+    }
+
+    /**
+     * 设置薪资信息(数据从Excel获取)
+     *
+     * @param file 文件名
+     */
+    private List<Pay> setPayFromExcel(String file, String workMonth) {
+        LinkedHashMap<String, Double> linkedHashMap = getWorkDaysByExcel(file);
+        List<Employee> employees = employeeMapper.selectAll();
+        List<Pay> pays = new ArrayList<>();
+        for (Employee employee : employees) {
+            String id = UUID.randomUUID().toString();
+            String employeeId = employee.getEmployeeId();
+            String name = employee.getName();
+            Double workDays = linkedHashMap.get(employeeId);
+            BigDecimal currentWage = BigDecimal.valueOf(employee.getWage());
+            BigDecimal socialSecurity = getSocialSecurity(currentWage);
+            BigDecimal welfare = BigDecimal.valueOf(0);
+            BigDecimal otherDeduction = BigDecimal.valueOf(0);
+            BigDecimal finalPay = BigDecimal.valueOf(0);
+            if (workDays != null) {
+                finalPay = getFinalWage(currentWage, employee.getRole(), workDays, otherDeduction);
+            }
+            Pay pay = new Pay(id, employeeId, name, workMonth, workDays, currentWage);
+            pay.setSocialSecurity(socialSecurity).setWelfare(welfare)
+                    .setFinalPay(finalPay).setOtherDeduction(otherDeduction);
+            pays.add(pay);
+        }
+        return pays;
+    }
+
+    /**
+     * 通过Excel导入出勤信息
+     *
+     * @param file 出勤信息文件
+     * @return 工号为key，出勤天数为value的linkedHashMap
+     */
+    private LinkedHashMap<String, Double> getWorkDaysByExcel(String file) {
+        List<ArrayList<String>> attendanceTable = ExcelUtil.getInstance()
+                .readAllRowLimitColumns(file, 0, true, 0, 1);
+
+        LinkedHashMap<String, Double> linkedHashMap = new LinkedHashMap<>();
+        for (ArrayList<String> row : attendanceTable) {
+            String employeeId = row.get(0);
+            Double workDays = 0.0;
+            try {
+                workDays = Double.parseDouble(row.get(1));
+            } catch (Exception e) {
+                LOGGER.error("表格数据错误: {}", e.getMessage());
+            }
+            linkedHashMap.put(employeeId, workDays);
+        }
+        return linkedHashMap;
     }
 
     /**
@@ -102,7 +167,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     private BigDecimal getFinalWage(BigDecimal basicWage, String role, double workDays, BigDecimal otherDeductions) {
         BigDecimal wage = basicWage.multiply
-                (BigDecimal.valueOf(WageCardinalityTool.getWageCardinality(role)))
+                (BigDecimal.valueOf(WageCardinalityUtil.getWageCardinality(role)))
                 .multiply(BigDecimal.valueOf(workDays / 22));
         BigDecimal socialSecurity = getSocialSecurity(basicWage);
         return wage.subtract(socialSecurity)
@@ -111,12 +176,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 计算应缴纳社保
+     *
      * @param basicWage 基本薪资
      * @return 社保金额
      */
     private BigDecimal getSocialSecurity(BigDecimal basicWage) {
         return basicWage
-                    .multiply(BigDecimal.valueOf(8 + 1 + 2L))
-                    .divide(BigDecimal.valueOf(100.0));
+                .multiply(BigDecimal.valueOf(8 + 1 + 2L))
+                .divide(BigDecimal.valueOf(100.0));
     }
 }

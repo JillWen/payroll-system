@@ -1,5 +1,7 @@
 package com.bamboocloud.homework.pay.model;
 
+import com.bamboocloud.homework.pay.common.util.excel.ExcelResources;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -85,6 +87,7 @@ public class Pay  implements Serializable {
         this.id = id;
     }
 
+    @ExcelResources(title = "工号", order = 1)
     public String getEmployeeId() {
         return employeeId;
     }
@@ -93,6 +96,7 @@ public class Pay  implements Serializable {
         this.employeeId = employeeId;
     }
 
+    @ExcelResources(title = "姓名", order = 2)
     public String getName() {
         return name;
     }
@@ -109,6 +113,7 @@ public class Pay  implements Serializable {
         this.workMonth = workMonth;
     }
 
+    @ExcelResources(title = "实际出勤天数", order = 3)
     public Double getWorkDays() {
         return workDays;
     }
@@ -117,6 +122,7 @@ public class Pay  implements Serializable {
         this.workDays = workDays;
     }
 
+    @ExcelResources(title = "当月薪资", order = 4)
     public BigDecimal getCurrentWage() {
         return currentWage;
     }
@@ -125,6 +131,7 @@ public class Pay  implements Serializable {
         this.currentWage = currentWage;
     }
 
+    @ExcelResources(title = "社保扣款", order = 5)
     public BigDecimal getSocialSecurity() {
         return socialSecurity;
     }
@@ -143,6 +150,7 @@ public class Pay  implements Serializable {
         return this;
     }
 
+    @ExcelResources(title = "其他扣款", order = 6)
     public BigDecimal getOtherDeduction() {
         return otherDeduction;
     }
@@ -152,6 +160,7 @@ public class Pay  implements Serializable {
         return this;
     }
 
+    @ExcelResources(title = "实际薪资", order = 7)
     public BigDecimal getFinalPay() {
         return finalPay;
     }

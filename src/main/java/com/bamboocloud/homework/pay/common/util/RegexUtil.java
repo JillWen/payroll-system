@@ -17,7 +17,12 @@ public class RegexUtil {
     public static boolean isMonth(String month) {
         return !StringUtils.isBlank(month) && Pattern.matches("[0-9]{4}(0[1-9]|1[0-2])", month);
     }
+    private static RegexUtil regexUtil = new RegexUtil();
 
     private RegexUtil() {
+    }
+
+    public static RegexUtil getInstance(){
+        return regexUtil;
     }
 }

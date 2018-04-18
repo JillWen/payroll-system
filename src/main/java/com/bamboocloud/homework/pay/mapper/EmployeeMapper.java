@@ -42,6 +42,12 @@ public interface EmployeeMapper {
     Employee selectByPrimaryKey(String id);
 
     /**
+     * 查询所有员工信息
+     * @return 所有员工信息
+     */
+    List<Employee> selectAll();
+
+    /**
      * 修改员工信息
      *
      * @param employee 员工信息
