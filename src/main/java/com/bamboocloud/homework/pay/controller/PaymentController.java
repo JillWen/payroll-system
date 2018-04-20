@@ -8,16 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -35,12 +32,21 @@ import java.util.List;
  * @author : 文洁
  * 创建日期: 2018/4/16
  */
-@RestController
-@RequestMapping("payroll_system")
+@Controller
+@RequestMapping("payroll")
 public class PaymentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PaymentController.class);
     @Autowired
     PaymentService paymentService;
+
+    /**
+     * 主页
+     * @return 主页
+     */
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public String home(){
+        return "index";
+    }
 
     /**
      * 获取单个员工工资
@@ -50,6 +56,7 @@ public class PaymentController {
      * @return 该员工该月工资
      */
     @RequestMapping(value = "payment", method = RequestMethod.GET)
+    @ResponseBody
     public BigDecimal getPayment(@RequestParam(value = "employeeId") String employeeId,
                                  @RequestParam(value = "workMonth") String workMonth) {
         return paymentService.getSingleEmployeePayment(employeeId, workMonth);
@@ -62,6 +69,7 @@ public class PaymentController {
      * @return 工资信息列表
      */
     @RequestMapping(value = "month_payment", method = RequestMethod.GET)
+    @ResponseBody
     public List<Pay> getPayment(@RequestParam(value = "workMonth") String workMonth) {
         return paymentService.getEmployeePaymentsByMonth(workMonth);
     }
@@ -73,6 +81,7 @@ public class PaymentController {
      * @param request   HttpServletRequest enctype="multipart/form-data" 传入文件name="file"
      */
     @RequestMapping(value = "import", method = RequestMethod.POST)
+    @ResponseBody
     public String getPaymentByAttendanceFile(@RequestParam(value = "workMonth") String workMonth,
                                              HttpServletRequest request) {
         String file = FileUtil.uploadFile(request);

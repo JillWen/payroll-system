@@ -1,0 +1,129 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="description" content="Payroll-system homepage"/>
+    <meta name="keywords" content="wage management, Payroll-system, homepage"/>
+    <title>首页</title>
+    <link rel="icon" href="/img/icon.ico" type="image/x-icon"/>
+
+    <link href="/css/common.css" rel="stylesheet"/>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container">
+    <div th:include="fragments/header :: header"></div>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="page-header">
+                <div class="alert alert-info" role="alert">
+                    <h4>工资计算系统.</h4>
+                    <ul>
+                        <li><a href="https://github.com/JillWen/payroll-system" target="_blank"
+                               class="alert-link">click here to
+                            get the code</a>.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">工资导出</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="searchForm" method="post" action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputMonth" class="col-sm-2 control-label">月份：</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" id="inputMonth" name="inputMonth"
+                                       placeholder="如201803"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputFile" class="col-sm-2 control-label">出勤表：</label>
+                            <div class="col-md-3">
+                                <input type="file" class="form-control-file" id="inputFile" name="file"
+                                       placeholder="出勤Excel"/>
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-sm-offset-10">
+                            <button type="submit" class="btn btn-default">查询</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="fragments/footer:: footer"></div>
+
+
+<script type="text/javascript">
+    $.validator.setDefaults({
+        submitHandler: function () {
+            alert("submitted!");
+        }
+    });
+
+    $(document).ready(function () {
+        $("#searchForm").validate({
+            rules: {
+                inputMonth: {
+                    required: true,
+                    email: true
+                },
+                file: "required"
+            },
+            messages: {
+                inputMonth: "Please enter a valid month",
+                file: "Please upload your file"
+            },
+            errorElement: "em",
+            errorPlacement: function (error, element) {
+                // Add the `help-block` class to the error element
+                error.addClass("help-block");
+
+                // Add `has-feedback` class to the parent div.form-group
+                // in order to add icons to inputs
+                element.parents(".col-sm-3").addClass("has-feedback");
+
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.parent("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+
+                // Add the span element, if doesn't exists, and apply the icon classes to it.
+                if (!element.next("span")[0]) {
+                    $("<span class='glyphicon glyphicon-remove form-control-feedback'></span>").insertAfter(element);
+                }
+            },
+            success: function (label, element) {
+                // Add the span element, if doesn't exists, and apply the icon classes to it.
+                if (!$(element).next("span")[0]) {
+                    $("<span class='glyphicon glyphicon-ok form-control-feedback'></span>").insertAfter($(element));
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-3").addClass("has-error").removeClass("has-success");
+                $(element).next("span").addClass("glyphicon-remove").removeClass("glyphicon-ok");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-3").addClass("has-success").removeClass("has-error");
+                $(element).next("span").addClass("glyphicon-ok").removeClass("glyphicon-remove");
+            }
+        });
+    });
+</script>
+</body>
+</html>
