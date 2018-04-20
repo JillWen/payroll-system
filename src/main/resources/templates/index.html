@@ -43,9 +43,9 @@
                 <div class="panel-body">
                     <form id="searchForm" method="post" action="" class="form-horizontal">
                         <div class="form-group">
-                            <label for="inputMonth" class="col-sm-2 control-label">月份：</label>
+                            <label for="workMonth" class="col-sm-2 control-label">月份：</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="inputMonth" name="inputMonth"
+                                <input type="text" class="form-control" id="workMonth" name="workMonth"
                                        placeholder="如201803"/>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-offset-10">
-                            <button type="submit" class="btn btn-default">查询</button>
+                            <button type="button" id="searchButton" class="btn btn-default">查询</button>
                         </div>
                     </form>
                 </div>
@@ -70,22 +70,19 @@
 
 <script type="text/javascript">
     $.validator.setDefaults({
-        submitHandler: function () {
-            alert("submitted!");
-        }
     });
 
     $(document).ready(function () {
         $("#searchForm").validate({
             rules: {
-                inputMonth: {
+                workMonth: {
                     required: true,
                     isValidMonth: true
                 },
                 file: "required"
             },
             messages: {
-                inputMonth: "Please enter a valid month",
+                workMonth: "Please enter a valid month",
                 file: "Please upload your file"
             },
             errorElement: "em",
@@ -130,6 +127,23 @@
             var validMonth = /[0-9]{4}(0[1-9]|1[0-2])/;
             return this.optional(element) || (validMonth.test(value));
         }, "not a valid month");
+    });
+
+    $("#searchButton").click(function(){
+        var form = new FormData(document.getElementById("searchForm"));
+        $.ajax({
+            url:"http://localhost:8081/payroll/import",
+            type:"post",
+            data:form,
+            processData:false,
+            contentType:false,
+            success:function(data){
+                alert("工资信息已生成，请查看: \n" + data );
+            },
+            error:function(e){
+                alert("发生错误！！");
+            }
+        });
     });
 </script>
 </body>

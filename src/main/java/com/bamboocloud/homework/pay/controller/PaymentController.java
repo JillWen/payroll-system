@@ -96,7 +96,7 @@ public class PaymentController {
             LOGGER.error("delete file failed : {}", e.getMessage());
         }
         final String outPutFile = StringUtils.join("D:"
-                , File.separator, "payment_", workMonth, ".xlsx");
+                , File.separator, "payment", workMonth, ".xlsx");
         ExcelUtil.getInstance().exportObjToExcel(outPutFile
                 , pays, Pay.class);
         return outPutFile;
