@@ -80,7 +80,7 @@
             rules: {
                 inputMonth: {
                     required: true,
-                    email: true
+                    isValidMonth: true
                 },
                 file: "required"
             },
@@ -125,6 +125,11 @@
                 $(element).next("span").addClass("glyphicon-ok").removeClass("glyphicon-remove");
             }
         });
+        // 邮政编码验证
+        jQuery.validator.addMethod("isValidMonth", function(value, element) {
+            var validMonth = /[0-9]{4}(0[1-9]|1[0-2])/;
+            return this.optional(element) || (validMonth.test(value));
+        }, "not a valid month");
     });
 </script>
 </body>
